@@ -26,10 +26,9 @@ jobs:
           docker run --rm \
             -v "$PWD:/src" \
             fluidattacks/sast:latest \
-            sast scan /src/config.yaml
+            sast --strict scan /src/config.yaml
           
       - name: Upload scan results
-        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sast-results-with-config
