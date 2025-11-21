@@ -1,0 +1,22 @@
+name: SAST Scan - Basic (Sin Romper)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sast-scan:
+    name: Fluid Attacks SAST Scan - Basic
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Fluid Attacks SAST Scan (Basic)
+        id: sast_scan
+        continue-on-error: true 
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            fluidattacks/sast:latest \
+            sast scan /src
