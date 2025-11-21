@@ -4,7 +4,7 @@ output:
   format: CSV
 
 working_dir: .
-language: EN
+language: ES
 
 sast:
   include:
