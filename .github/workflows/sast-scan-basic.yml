@@ -15,8 +15,6 @@ jobs:
       - name: Run Fluid Attacks SAST Scan (Basic)
         id: sast_scan
         continue-on-error: true 
-        run: |
-          docker run --rm \
-            -v "$PWD:/src" \
-            fluidattacks/sast:latest \
-            sast scan /src
+        uses: docker://docker.io/fluidattacks/sast:latest
+        with:
+          args: sast scan .

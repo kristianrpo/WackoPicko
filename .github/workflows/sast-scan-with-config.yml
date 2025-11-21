@@ -22,11 +22,9 @@ jobs:
           
       - name: Run Fluid Attacks SAST Scan (Fail on Vulnerabilities)
         id: sast_scan
-        run: |
-          docker run --rm \
-            -v "$PWD:/src" \
-            fluidattacks/sast:latest \
-            sast --strict scan /src/config.yaml
+        uses: docker://docker.io/fluidattacks/sast:latest
+        with:
+          args: sast --strict scan config.yaml
           
       - name: Upload scan results
         if: always()
