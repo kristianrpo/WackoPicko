@@ -1,0 +1,22 @@
+name: SAST Scan - Fail on Vulnerabilities
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sast-scan:
+    name: Fluid Attacks SAST Scan - Fail on Vulnerabilities
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Fluid Attacks SAST Scan (Fail on Vulnerabilities)
+        id: sast_scan
+        run: |
+          docker run --rm \
+            -v "$PWD:/src" \
+            fluidattacks/sast:latest \
+            sast scan /src
+
