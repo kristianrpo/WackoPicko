@@ -13,12 +13,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install Semgrep
+        run: pip install semgrep
+
       - name: Run Semgrep SAST Scan
-        uses: returntocorp/semgrep-action@v1
-        with:
-          config: p/owasp-top-ten
-          outputFormat: json
-          outputFile: semgrep.json
+        run: semgrep --config=p/owasp-top-ten --json --output=semgrep.json .
         continue-on-error: true
 
       - name: Upload Semgrep Report
