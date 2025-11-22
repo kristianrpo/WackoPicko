@@ -1,0 +1,54 @@
+name: OWASP SAST + SCA Scan (Alternative to Fluid Attacks)
+
+on:
+  workflow_dispatch:
+
+jobs:
+
+  sast-semgrep:
+    name: Semgrep SAST Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep SAST Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/owasp-top-ten
+          outputFormat: json
+          outputFile: semgrep.json
+        continue-on-error: true
+
+      - name: Upload Semgrep Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: semgrep-report
+          path: semgrep.json
+          retention-days: 30
+
+  sca-dependency-check:
+    name: OWASP Dependency-Check (SCA)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run OWASP Dependency-Check
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: "WackoPicko"
+          path: .
+          format: "HTML"
+        continue-on-error: true
+
+      - name: Upload Dependency-Check Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: ./reports
+          retention-days: 30
