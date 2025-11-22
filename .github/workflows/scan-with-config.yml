@@ -1,0 +1,69 @@
+name: SAST + SCA Scan - With Config (Fail on Vulnerabilities)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sast-scan-with-config:
+    name: Fluid Attacks SAST Scan - With Config
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Validate sast-config.yaml exists
+        run: |
+          if [ ! -f sast-config.yaml ]; then
+            echo "Error: sast-config.yaml no encontrado"
+            exit 1
+          fi
+          echo "sast-config.yaml encontrado"
+          
+      - name: Run Fluid Attacks SAST Scan with sast-config.yaml
+        id: sast_scan
+        uses: docker://docker.io/fluidattacks/sast:latest
+        with:
+          args: sast --strict scan sast-config.yaml
+          
+      - name: Upload SAST scan results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-results-with-config
+          path: |
+            Fluid-Attacks-Sast-Results.csv
+            sast-config.yaml
+          retention-days: 30
+          
+  sca-scan-with-config:
+    name: Fluid Attacks SCA Scan - With Config
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Validate sca-config.yaml exists
+        run: |
+          if [ ! -f sca-config.yaml ]; then
+            echo "Error: sca-config.yaml no encontrado"
+            exit 1
+          fi
+          echo "sca-config.yaml encontrado"
+          
+      - name: Run Fluid Attacks SCA Scan with sca-config.yaml
+        id: sca_scan
+        uses: docker://docker.io/fluidattacks/sca:latest
+        with:
+          args: sca --strict scan sca-config.yaml
+          
+      - name: Upload SCA scan results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sca-results-with-config
+          path: |
+            Fluid-Attacks-SCA-Results.csv
+            sca-config.yaml
+          retention-days: 30

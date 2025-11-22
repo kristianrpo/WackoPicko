@@ -1,0 +1,33 @@
+name: SAST + SCA Scan - Fail on Vulnerabilities
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sast-scan:
+    name: Fluid Attacks SAST Scan - Fail on Vulnerabilities
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Fluid Attacks SAST Scan (Fail on Vulnerabilities)
+        id: sast_scan
+        uses: docker://docker.io/fluidattacks/sast:latest
+        with:
+          args: sast --strict scan .
+          
+  sca-scan:
+    name: Fluid Attacks SCA Scan - Fail on Vulnerabilities
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Run Fluid Attacks SCA Scan (Fail on Vulnerabilities)
+        id: sca_scan
+        uses: docker://docker.io/fluidattacks/sca:latest
+        with:
+          args: sca --strict scan .
